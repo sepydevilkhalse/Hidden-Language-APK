@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="زبان مخفی">
+    
+    <!-- لینک به Manifest برای PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <title>زبان مخفی</title>
+    <style>
+        /* === استایل‌های شما (همان کد قبلی) === */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        body {
+            background: linear-gradient(135deg, #0f0c29, #1a1a3e, #16213e);
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            margin: 0; padding: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: flex-start;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        body::-webkit-scrollbar { display: none; }
+        body { scrollbar-width: none; -ms-overflow-style: none; }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0c29, #1a1a3e, #16213e);
+            z-index: -5;
+            animation: bgShift 15s ease-in-out infinite;
+        }
+        @keyframes bgShift {
+            0%,100% { background: linear-gradient(135deg, #0f0c29, #1a1a3e, #16213e); }
+            33% { background: linear-gradient(135deg, #1a1a3e, #16213e, #0f0c29); }
+            66% { background: linear-gradient(135deg, #16213e, #0f0c29, #1a1a3e); }
+        }
+
+        .glass-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -4;
+            pointer-events: none;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(139,92,246,0.02) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(99,102,241,0.01) 0%, transparent 60%);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            animation: glassPulse 10s ease-in-out infinite;
+        }
+        @keyframes glassPulse {
+            0%,100% { opacity: 0.6; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); }
+            50% { opacity: 1; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); }
+        }
+
+        .stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -3; overflow: hidden;
+        }
+        .star {
+            position: absolute; background: white; border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite alternate;
+            box-shadow: 0 0 8px rgba(255,255,255,0.2), 0 0 20px rgba(139,92,246,0.05);
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.1; transform: scale(0.3); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .floating-particles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -3; overflow: hidden;
+        }
+        .f-particle {
+            position: absolute; border-radius: 50%;
+            background: radial-gradient(circle, rgba(139,92,246,0.04), transparent 70%);
+            animation: floatParticle var(--duration) ease-in-out infinite alternate;
+            filter: blur(4px);
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(0px) scale(1) rotate(0deg); }
+            100% { transform: translateY(-60px) scale(1.15) rotate(12deg); }
+        }
+
+        .shooting-star {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, white, rgba(255,255,255,0.6));
+            border-radius: 50%;
+            box-shadow: 0 0 12px 4px rgba(255,255,255,0.15), 0 0 40px 8px rgba(139,92,246,0.05);
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0;
+        }
+        .shooting-star::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 80px;
+            height: 1.5px;
+            background: linear-gradient(to right, rgba(255,255,255,0.5), transparent);
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+
+        .aurora {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(40px);
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.12;
+            animation: auroraFloat 14s ease-in-out infinite alternate;
+        }
+        @keyframes auroraFloat {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.05; }
+            50% { opacity: 0.15; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(var(--s)) rotate(var(--r)); opacity: 0.1; }
+        }
+
+        .container {
+            width: 100%; max-width: 500px; margin: 0 auto;
+            padding: 16px; padding-top: 18px; position: relative; z-index: 1;
+        }
+
+        .glass-card {
+            background: rgba(25,20,45,0.15);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            border-radius: 32px;
+            padding: 14px 18px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.04);
+            border: 1px solid rgba(139,92,246,0.04);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-bottom: 12px;
+            position: relative;
+            animation: cardEntrance 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .glass-card:nth-child(1) { animation-delay: 0.05s; }
+        .glass-card:nth-child(2) { animation-delay: 0.15s; }
+        .glass-card:nth-child(3) { animation-delay: 0.25s; }
+        .glass-card:nth-child(4) { animation-delay: 0.35s; }
+        .glass-card:nth-child(5) { animation-delay: 0.45s; }
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(50px) scale(0.94); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .glass-card::before {
+            content: ''; position: absolute; inset: -1px; border-radius: 33px; padding: 1px;
+            background: linear-gradient(135deg, rgba(180,130,255,0.06), rgba(160,120,255,0.02), rgba(180,130,255,0.06));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            pointer-events: none;
+            animation: borderGlow 6s ease-in-out infinite;
+            background-size: 200% 200%;
+        }
+        @keyframes borderGlow {
+            0%,100% { opacity: 0.08; background-position: 0% 50%; }
+            50% { opacity: 0.3; background-position: 100% 50%; }
+        }
+        .glass-card::after {
+            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 34px;
+            background: radial-gradient(circle at var(--mouse-x,50%) var(--mouse-y,50%), rgba(139,92,246,0.02) 0%, transparent 60%);
+            pointer-events: none; transition: background 0.15s ease; z-index: -1;
+        }
+        .glass-card:hover {
+            transform: translateY(-3px) scale(1.005);
+            box-shadow: 0 16px 50px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06);
+            border-color: rgba(139,92,246,0.08);
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px !important;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .nearest-hour {
+            font-size: 0.6rem;
+            color: #8a8aaa;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            direction: rtl;
+            flex: 1;
+            min-width: 100px;
+        }
+        .nearest-hour .nh-time { color: #c4b5fd; font-family: 'Courier New', monospace; font-weight: bold; }
+        .nearest-hour .nh-meaning { color: #a78bfa; }
+        .nearest-hour .nh-source { color: #6a6a8a; font-size: 0.5rem; }
+
+        .header-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
+        .time-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(139,92,246,0.03);
+            padding: 5px 20px;
+            border-radius: 24px;
+            border: 1px solid rgba(139,92,246,0.04);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            transition: all 0.3s ease;
+            position: relative;
+            flex: 1;
+            justify-content: center;
+        }
+        .time-wrapper:hover {
+            border-color: rgba(139,92,246,0.1);
+            box-shadow: 0 0 30px rgba(139,92,246,0.02);
+        }
+        .time {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #c4b5fd;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 3px;
+            direction: ltr;
+            min-width: 70px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .time.meaning-mode {
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0;
+            min-width: 120px;
+            color: #a78bfa;
+            line-height: 1.4;
+        }
+
+        .help-btn {
+            background: rgba(139,92,246,0.04);
+            border: 1px solid rgba(139,92,246,0.06);
+            color: #a78bfa;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            flex-shrink: 0;
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+        }
+        .help-btn:hover {
+            background: rgba(139,92,246,0.08);
+            border-color: rgba(139,92,246,0.15);
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(139,92,246,0.03);
+        }
+        .help-btn:active { transform: scale(0.92); }
+
+        h1 {
+            text-align: center; font-size: 1.5rem; margin: 6px 0 4px 0;
+            color: #ffffff; display: flex; align-items: center; justify-content: center;
+            gap: 10px; font-weight: 700;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            animation: titleGlow 4s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(139,92,246,0.03);
+        }
+        .emoji, h1 .emoji, .result-label .emoji, .swap-hint .emoji, .btn .emoji {
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
+            font-weight: 400 !important;
+        }
+        @keyframes titleGlow {
+            0%,100% { text-shadow: 0 0 15px rgba(139,92,246,0.03), 0 0 30px rgba(139,92,246,0.01); }
+            50% { text-shadow: 0 0 25px rgba(139,92,246,0.08), 0 0 50px rgba(139,92,246,0.03); }
+        }
+        .sub {
+            text-align: center; color: #a78bfa; margin-bottom: 18px; font-size: 0.65rem;
+            border-bottom: 1px dashed rgba(139,92,246,0.06);
+            display: inline-block; width: auto; margin-left: auto; margin-right: auto;
+            padding-bottom: 5px; padding-left: 12px; padding-right: 12px;
+            letter-spacing: 1px;
+        }
+        .input-area { margin-bottom: 16px; }
+        .input-area label {
+            display: block; font-size: 0.6rem; color: #c4b5fd;
+            margin-bottom: 6px; margin-right: 6px;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+        }
+        textarea {
+            width: 100%;
+            background: rgba(15,12,30,0.25);
+            border: 1px solid rgba(139,92,246,0.04);
+            border-radius: 22px;
+            color: #f1f5f9;
+            font-size: 0.95rem;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', monospace;
+            resize: none; outline: none;
+            padding: 14px 16px; direction: rtl;
+            min-height: 110px; height: auto; overflow-y: hidden;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            line-height: 1.7;
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+        }
+        textarea:focus {
+            border-color: rgba(139,92,246,0.1);
+            box-shadow: 0 0 40px rgba(139,92,246,0.02), inset 0 0 30px rgba(139,92,246,0.01);
+            background: rgba(15,12,30,0.4);
+            transform: scale(1.008);
+        }
+        textarea::placeholder {
+            color: #4a4a6a; font-size: 0.85rem;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+        }
+        .result-area {
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-top: 8px; padding: 10px 16px !important;
+            position: relative; overflow: hidden;
+        }
+        .result-area:active { transform: scale(0.97); }
+        .result-label {
+            font-size: 0.6rem; color: #c4b5fd;
+            display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            position: relative; z-index: 1;
+        }
+        .result-text {
+            font-size: 0.95rem; word-wrap: break-word; line-height: 1.6;
+            font-weight: 500; color: #f1f5f9; min-height: 28px;
+            white-space: pre-wrap; position: relative; z-index: 1;
+            direction: ltr; text-align: left;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+        }
+        .result-text .emoji-only {
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
+            font-weight: 400 !important;
+        }
+        .result-text[dir="rtl"] { text-align: right; }
+        .copy-hint {
+            font-size: 0.55rem; color: #5a5a7a; text-align: center; margin-top: 8px;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            animation: hintPulse 3s ease-in-out infinite; position: relative; z-index: 1;
+            transition: color 0.3s ease;
+        }
+        .result-area:hover .copy-hint { color: #8a8aaa; }
+        @keyframes hintPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+        .swap-hint {
+            text-align: center; font-size: 0.6rem; color: #a78bfa; margin-top: 16px;
+            background: rgba(30,27,46,0.12);
+            padding: 8px; border-radius: 24px;
+            animation: pulseGlow 4s ease-in-out infinite;
+            border: 1px solid rgba(139,92,246,0.02);
+            position: relative;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            transition: all 0.3s ease;
+        }
+        .swap-hint:hover { background: rgba(30,27,46,0.2); border-color: rgba(139,92,246,0.04); }
+        .swap-hint::before {
+            content: ''; position: absolute; inset: -1px; border-radius: 25px; padding: 1px;
+            background: linear-gradient(135deg, rgba(180,130,255,0.03), rgba(160,120,255,0.01), rgba(180,130,255,0.03));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            pointer-events: none; animation: breatheGlow 6s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%,100% { background: rgba(30,27,46,0.1); border-color: rgba(139,92,246,0.01); }
+            50% { background: rgba(30,27,46,0.2); border-color: rgba(139,92,246,0.04); }
+        }
+
+        .btn-clear-wrapper {
+            margin-top: 12px;
+            display: flex;
+            justify-content: center;
+        }
+        .btn-clear {
+            width: 100%; padding: 12px; border: 1px solid rgba(239,68,68,0.1);
+            border-radius: 24px; background: rgba(239,68,68,0.04);
+            color: #f87171; font-size: 0.85rem; font-weight: 600;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            user-select: none;
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+        }
+        .btn-clear:active { transform: scale(0.96); background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.15); }
+
+        .btn-row {
+            display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; justify-content: center;
+        }
+        .btn {
+            padding: 8px 18px; border: 1px solid rgba(139,92,246,0.06);
+            border-radius: 24px; background: rgba(25,20,45,0.12);
+            color: #c4b5fd; font-size: 0.7rem;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            position: relative; overflow: hidden;
+            user-select: none;
+        }
+        .btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139,92,246,0.03), transparent);
+            transition: left 0.5s ease;
+        }
+        .btn:hover::before { left: 100%; }
+        .btn:active { transform: scale(0.93); }
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(139,92,246,0.06), rgba(99,102,241,0.02));
+            border-color: rgba(139,92,246,0.06);
+        }
+
+        .toast-container {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; display: flex; flex-direction: column;
+            align-items: center; gap: 6px; width: 90%; max-width: 450px;
+            pointer-events: none;
+        }
+        .toast {
+            width: 100%; padding: 14px 20px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 500;
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 16px 50px rgba(0,0,0,0.25);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            border: 1px solid rgba(255,255,255,0.02);
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            pointer-events: auto;
+            animation: toastSlideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+            transform-origin: top center;
+            position: relative;
+            overflow: hidden;
+        }
+        .toast.removing { animation: toastSlideOut 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translateY(-40px) scale(0.92); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes toastSlideOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-40px) scale(0.92); }
+        }
+        .toast .toast-icon {
+            font-size: 1.4rem;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
+            flex-shrink: 0;
+        }
+        .toast .toast-text { flex: 1; text-align: right; line-height: 1.4; }
+        .toast .toast-badge {
+            background: rgba(255,255,255,0.04);
+            padding: 2px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 700;
+            flex-shrink: 0; color: rgba(255,255,255,0.5);
+            display: none;
+        }
+        .toast .toast-badge.show-badge { display: inline-block; }
+        .toast .toast-progress {
+            position: absolute; bottom: 0; left: 0; height: 2.5px;
+            border-radius: 0 0 20px 20px;
+            animation: toastProgress 3s linear forwards;
+        }
+        @keyframes toastProgress { from { width: 100%; } to { width: 0%; } }
+        .toast-success {
+            background: rgba(16,185,129,0.7); color: white;
+            border-color: rgba(16,185,129,0.08);
+        }
+        .toast-success .toast-progress { background: rgba(255,255,255,0.15); }
+        .toast-error {
+            background: rgba(239,68,68,0.7); color: white;
+            border-color: rgba(239,68,68,0.08);
+        }
+        .toast-error .toast-progress { background: rgba(255,255,255,0.15); }
+        .toast-info {
+            background: rgba(59,130,246,0.7); color: white;
+            border-color: rgba(59,130,246,0.08);
+        }
+        .toast-info .toast-progress { background: rgba(255,255,255,0.15); }
+        .shake { animation: shakeAnim 0.4s ease-in-out; }
+        @keyframes shakeAnim {
+            0%,100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+        .spark {
+            position: fixed; pointer-events: none; font-size: 18px;
+            animation: sparkFly 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; z-index: 9999;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
+        }
+        @keyframes sparkFly {
+            0% { opacity: 1; transform: translate(0,0) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0) rotate(360deg); }
+        }
+        .heart-drop {
+            position: fixed; top: -30px; pointer-events: none; z-index: 9999;
+            animation: drop linear forwards;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
+            filter: drop-shadow(0 0 15px rgba(139,92,246,0.08));
+        }
+        @keyframes drop { to { transform: translateY(110vh); opacity: 0; } }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            z-index: 999;
+            justify-content: center; align-items: center;
+            padding: 20px;
+            animation: overlayFade 0.3s ease;
+        }
+        @keyframes overlayFade { from { opacity: 0; } to { opacity: 1; } }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: rgba(20,16,40,0.7);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            border-radius: 44px;
+            padding: 32px 28px 28px;
+            max-width: 480px;
+            width: 100%;
+            border: 1px solid rgba(139,92,246,0.06);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.3);
+            animation: modalPop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+            position: relative;
+            overflow: hidden;
+            max-height: 90vh;
+        }
+        .modal-box::before {
+            content: ''; position: absolute; inset: -1px; border-radius: 45px; padding: 1px;
+            background: linear-gradient(135deg, rgba(180,130,255,0.06), rgba(160,120,255,0.02), rgba(180,130,255,0.06));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            pointer-events: none;
+            animation: modalGlow 5s ease-in-out infinite;
+        }
+        @keyframes modalGlow {
+            0%,100% { opacity: 0.1; }
+            50% { opacity: 0.4; }
+        }
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.88) translateY(40px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 16px; padding-bottom: 14px;
+            border-bottom: 1px solid rgba(139,92,246,0.03);
+        }
+        .modal-header-icon {
+            font-size: 2rem;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
+            background: rgba(139,92,246,0.03);
+            width: 52px; height: 52px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 18px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .modal-header-icon:hover { background: rgba(139,92,246,0.06); transform: scale(1.05); }
+        .modal-header-title {
+            color: #f1f5f9; font-size: 1.15rem; font-weight: 700;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+        }
+        .modal-header-sub {
+            color: #7a7a9a; font-size: 0.7rem; font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139,92,246,0.02);
+            border: 1px solid rgba(139,92,246,0.03);
+            border-radius: 16px;
+            padding: 6px 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+        }
+        .modal-search:focus-within {
+            border-color: rgba(139,92,246,0.08);
+            background: rgba(139,92,246,0.04);
+        }
+        .modal-search input {
+            background: none; border: none; outline: none;
+            color: #c4b5fd; font-size: 0.8rem;
+            font-family: 'Courier New', monospace;
+            width: 100%; padding: 4px 0;
+            direction: ltr; text-align: center;
+        }
+        .modal-search input::placeholder { color: #4a4a6a; font-size: 0.65rem; }
+        .modal-search .search-icon { color: #a78bfa; font-size: 0.9rem; }
+
+        .modal-search-result {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            text-align: center;
+            padding: 6px 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(139,92,246,0.02);
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            direction: rtl;
+            min-height: 30px;
+        }
+        .modal-search-result .sr-found { color: #a78bfa; }
+        .modal-search-result .sr-notfound { color: #f87171; }
+        .modal-search-result .sr-purple { color: #a78bfa; font-weight: 600; }
+        .modal-search-result .sr-time-remaining {
+            color: #6a6a8a;
+            font-size: 0.7rem;
+        }
+        .modal-search-result .sr-meanings {
+            margin-top: 6px;
+            text-align: right;
+            padding-right: 8px;
+        }
+        .modal-search-result .sr-meanings .sr-meaning-line {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            padding: 2px 0;
+            justify-content: center;
+        }
+        .modal-search-result .sr-meanings .sr-meaning-line .sr-emoji {
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
+            font-size: 0.9rem;
+        }
+        .modal-search-result .sr-meanings .sr-meaning-line .sr-source-btn {
+            background: none; border: none;
+            color: #6a6a8a; font-size: 0.6rem;
+            cursor: pointer; padding: 0 4px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .modal-search-result .sr-meanings .sr-meaning-line .sr-source-btn:hover {
+            color: #a78bfa;
+        }
+
+        .modal-body {
+            color: #e2e8f0; font-size: 0.85rem; line-height: 2.2;
+            text-align: right;
+            white-space: pre-wrap;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            padding: 6px 0; overflow-y: auto; max-height: 50vh;
+            min-height: 60px;
+        }
+        .modal-body .hour-item {
+            display: flex; align-items: baseline; gap: 8px;
+            padding: 6px 0; border-bottom: 1px solid rgba(139,92,246,0.02);
+            flex-wrap: wrap;
+        }
+        .modal-body .hour-item .hour-time {
+            color: #c4b5fd; font-family: 'Courier New', monospace;
+            font-weight: bold; font-size: 0.8rem;
+            min-width: 45px; direction: ltr; text-align: left;
+        }
+        .modal-body .hour-item .hour-meanings {
+            flex: 1; display: flex; flex-direction: column; gap: 2px;
+        }
+        .modal-body .hour-item .hour-meanings .meaning-line {
+            display: flex; align-items: baseline;
+            gap: 6px; padding-right: 4px; position: relative;
+        }
+        .modal-body .hour-item .hour-meanings .meaning-line .m-emoji {
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
+            font-size: 0.9rem; flex-shrink: 0;
+        }
+        .modal-body .hour-item .hour-meanings .meaning-line .m-text {
+            color: #e2e8f0; font-size: 0.8rem;
+        }
+        .modal-body .hour-item .hour-meanings .meaning-line .m-source-btn {
+            background: none; border: none;
+            color: #6a6a8a; font-size: 0.6rem;
+            cursor: pointer; padding: 0 4px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', sans-serif;
+            position: relative; flex-shrink: 0;
+        }
+        .modal-body .hour-item .hour-meanings .meaning-line .m-source-btn:hover {
+            color: #a78bfa;
+        }
+        .modal-body .category-title {
+            color: #a78bfa; font-weight: 600; font-size: 0.85rem;
+            margin-top: 12px; margin-bottom: 4px;
+            border-bottom: 1px solid rgba(139,92,246,0.03);
+            padding-bottom: 4px;
+        }
+        .modal-body .past-hours-label {
+            color: #6a6a8a; font-size: 0.7rem;
+            margin-top: 12px; padding-top: 8px;
+            border-top: 1px solid rgba(139,92,246,0.03);
+            text-align: center;
+        }
+        .modal-body .line-item {
+            display: block;
+            padding: 2px 0;
+            line-height: 1.8;
+        }
+        .modal-body .line-item .hl { color: #a78bfa; }
+
+        .modal-footer {
+            margin-top: 20px; padding-top: 16px;
+            border-top: 1px solid rgba(139,92,246,0.03);
+            display: flex; justify-content: center;
+        }
+        .modal-footer .btn-modal-close {
+            padding: 10px 36px; border: none; border-radius: 50px;
+            background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(99,102,241,0.02));
+            color: #c4b5fd; font-size: 0.8rem;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            cursor: pointer; transition: all 0.3s ease;
+            border: 1px solid rgba(139,92,246,0.04);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+        }
+        .modal-footer .btn-modal-close:hover {
+            background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(99,102,241,0.06));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139,92,246,0.04);
+            border-color: rgba(139,92,246,0.08);
+        }
+
+        .source-tooltip {
+            position: fixed;
+            background: rgba(20,16,40,0.85);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            border: 1px solid rgba(139,92,246,0.08);
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 0.7rem;
+            color: #e2e8f0;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Segoe UI Emoji', sans-serif;
+            z-index: 9999;
+            max-width: 280px;
+            text-align: center;
+            direction: rtl;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+        .source-tooltip.show { opacity: 1; }
+
+        .welcome-message {
+            user-select: none; -webkit-user-select: none;
+            -moz-user-select: none; -ms-user-select: none;
+            cursor: default !important; pointer-events: none !important;
+        }
+        .welcome-message .copy-hint { display: none !important; }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: rgba(10,8,28,0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.08); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(139,92,246,0.15); }
+
+        @media (max-width:480px) {
+            .modal-box { padding: 24px 16px 20px; border-radius: 34px; }
+            .glass-card { padding: 12px 14px; border-radius: 28px; }
+            .f-particle { display: none; }
+            .stars { opacity: 0.5; }
+            .toast-container { top: 12px; width: 95%; }
+            .btn { padding: 8px 12px; font-size: 0.7rem; }
+            .btn-clear { padding: 12px 16px; font-size: 0.9rem; }
+            .modal-header-icon { width: 42px; height: 42px; font-size: 1.5rem; border-radius: 14px; }
+            .modal-header-title { font-size: 1rem; }
+            .modal-body { font-size: 0.75rem; line-height: 2; }
+            .modal-body .hour-item .hour-time { font-size: 0.7rem; min-width: 38px; }
+            .modal-body .hour-item .hour-meanings .meaning-line .m-text { font-size: 0.7rem; }
+            .header-top { flex-direction: column; align-items: stretch; gap: 4px; }
+            .time.meaning-mode { font-size: 0.65rem; min-width: 80px; }
+            .modal-search input { font-size: 0.7rem; }
+        }
+        
+        /* استایل مخصوص نسخه و آپدیت */
+        .version-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 14px;
+            background: rgba(139,92,246,0.04);
+            border-radius: 20px;
+            border: 1px solid rgba(139,92,246,0.04);
+            margin-top: 8px;
+            font-size: 0.6rem;
+            color: #8a8aaa;
+        }
+        .version-bar .v-number {
+            color: #a78bfa;
+            font-family: 'Courier New', monospace;
+        }
+        .version-bar .v-check {
+            cursor: pointer;
+            color: #6a6a8a;
+            transition: all 0.3s ease;
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+        }
+        .version-bar .v-check:hover {
+            color: #a78bfa;
+            border-color: rgba(139,92,246,0.08);
+            background: rgba(139,92,246,0.02);
+        }
+        .version-bar .v-status {
+            font-size: 0.5rem;
+            color: #5a5a7a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+<div class="glass-overlay"></div>
+<div class="stars" id="stars"></div>
+<div class="floating-particles" id="floatingParticles"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div class="modal-header-icon" id="modalIcon">ℹ️</div>
+            <div>
+                <div class="modal-header-title" id="modalTitle">عنوان</div>
+                <div class="modal-header-sub" id="modalSub">اطلاعات</div>
+            </div>
+        </div>
+        <div class="modal-search" id="modalSearchContainer" style="display:none;">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="modalSearchInput" placeholder="جستجوی ساعت... (مثال: 12:12)" maxlength="5" dir="ltr">
+        </div>
+        <div class="modal-search-result" id="modalSearchResult" style="display:none;"></div>
+        <div class="modal-body" id="modalBody">متن</div>
+        <div class="modal-footer">
+            <button class="btn-modal-close" onclick="closeModal()">بستن ✕</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="glass-card header">
+        <div class="header-top">
+            <div class="nearest-hour" id="nearestHour">⏳ نزدیک‌ترین: <span class="nh-time">--:--</span> <span class="nh-meaning">...</span> <span class="nh-source"></span></div>
+        </div>
+        <div class="header-bottom">
+            <div class="time-wrapper">
+                <span class="time" id="clock">--:--:--</span>
+            </div>
+            <button class="help-btn" id="helpBtn" title="مشاهده همه معانی ساعت‌ها">!</button>
+        </div>
+        <!-- نوار نسخه و آپدیت -->
+        <div class="version-bar" id="versionBar">
+            <span>📦 نسخه: <span class="v-number" id="versionNumber">1.0.0</span></span>
+            <span class="v-status" id="versionStatus">● برخط</span>
+            <span class="v-check" id="checkUpdateBtn" onclick="checkForUpdate()">🔄 بروزرسانی</span>
+        </div>
+    </div>
+
+    <div class="glass-card" style="margin-top:0;">
+        <h1><span class="emoji">🤫</span> زبان مخفی <span class="emoji">🔐</span></h1>
+        <div style="text-align:center;"><span class="sub">تبدیل خودکار متن ⇄ کد</span></div>
+        <div class="input-area">
+            <label>📝 بنویس... (فقط حروف فارسی)</label>
+            <textarea id="inputBox" rows="3" placeholder="مثال:&#10;سلام خوبی&#10;یا&#10;15_27_1_28•9_30_2_32"></textarea>
+        </div>
+        <div class="result-area glass-card" id="resultBox" style="padding:12px 16px; margin:0;">
+            <div class="result-label"><span class="emoji">🔓</span> نتیجه</div>
+            <div id="outputText" class="result-text" dir="rtl">—</div>
+            <div class="copy-hint">👇 برای کپی، روی نتیجه ضربه بزنید 👇</div>
+        </div>
+        <div class="btn-clear-wrapper">
+            <button class="btn-clear" onclick="clearAll()">
+                <span>✕</span> پاکسازی <span>✕</span>
+            </button>
+        </div>
+        <div class="swap-hint">✨ هوشمند | متن فارسی ←→ کد ✨</div>
+    </div>
+
+    <div class="glass-card" style="padding:12px 16px;">
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="showAbout()">ℹ️ درباره</button>
+            <button class="btn btn-primary" onclick="showStats()">📊 آمار من</button>
+            <button class="btn btn-primary" onclick="showHistory()">📜 تاریخچه</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ==============================================
+// ===== مدیریت نسخه و آپدیت خودکار =====
+// ==============================================
+const APP_VERSION = '1.0.0';
+const GITHUB_REPO = 'sepydevilkhalse/Hidden-Language-APK';
+const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/main/index.html`;
+
+// تابع بررسی آپدیت
+async function checkForUpdate() {
+    const statusEl = document.getElementById('versionStatus');
+    const versionEl = document.getElementById('versionNumber');
+    
+    try {
+        statusEl.textContent = '⏳ در حال بررسی...';
+        statusEl.style.color = '#fbbf24';
+        
+        // دریافت نسخه از فایل در GitHub
+        const response = await fetch(GITHUB_RAW_URL, {
+            cache: 'no-cache',
+            headers: { 'Cache-Control': 'no-cache' }
+        });
+        
+        if (!response.ok) throw new Error('خطا در ارتباط با سرور');
+        
+        const html = await response.text();
+        
+        // استخراج نسخه از فایل
+        const versionMatch = html.match(/APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
+        const newVersion = versionMatch ? versionMatch[1] : null;
+        
+        if (newVersion && newVersion !== APP_VERSION) {
+            statusEl.textContent = '🔄 آپدیت موجود!';
+            statusEl.style.color = '#34d399';
+            
+            // نمایش پیام به کاربر
+            showToast(`🔄 نسخه جدید ${newVersion} پیدا شد! در حال آپدیت...`, 'info', 3000);
+            
+            // ذخیره نسخه جدید در localStorage
+            localStorage.setItem('app_version', newVersion);
+            
+            // بارگذاری مجدد صفحه با نسخه جدید
+            setTimeout(() => {
+                // ترفند: با یک پارامتر کوئری، کش مرورگر را دور بزنیم
+                window.location.href = window.location.pathname + '?v=' + Date.now();
+            }, 1000);
+            
+        } else if (newVersion === APP_VERSION) {
+            statusEl.textContent = '✓ بروز هستید';
+            statusEl.style.color = '#34d399';
+            showToast('✅ شما از آخرین نسخه استفاده می‌کنید!', 'success', 2000);
+        } else {
+            statusEl.textContent = '⚠️ خطا در خواندن نسخه';
+            statusEl.style.color = '#f87171';
+        }
+        
+        versionEl.textContent = newVersion || APP_VERSION;
+        
+    } catch (error) {
+        console.error('Error checking update:', error);
+        statusEl.textContent = '📡 آفلاین';
+        statusEl.style.color = '#6a6a8a';
+        showToast('⚠️ اتصال اینترنت را بررسی کنید', 'error', 3000);
+    }
+}
+
+// ==============================================
+// ===== دیکشنری‌ها (سیستم تبدیل اصلی) =====
+// ==============================================
+const letterToNum = {
+    'ا':'1','آ':'1','ب':'2','پ':'3','ت':'4','ث':'5',
+    'ج':'6','چ':'7','ح':'8','خ':'9','د':'10','ذ':'11',
+    'ر':'12','ز':'13','ژ':'14','س':'15','ش':'16','ص':'17',
+    'ض':'18','ط':'19','ظ':'20','ع':'21','غ':'22','ف':'23',
+    'ق':'24','ک':'25','گ':'26','ل':'27','م':'28','ن':'29',
+    'و':'30','ه':'31','ی':'32'
+};
+const numToLetter = {};
+for (let key in letterToNum) {
+    let val = letterToNum[key];
+    if (val === '1') numToLetter[val] = 'ا';
+    else if (!numToLetter[val]) numToLetter[val] = key;
+}
+const numberToGreek = {
+    '0':'ο','1':'α','2':'β','3':'γ','4':'δ',
+    '5':'ε','6':'π','7':'ζ','8':'η','9':'θ'
+};
+const greekToNum = {
+    'ο':'0','α':'1','β':'2','γ':'3','δ':'4',
+    'ε':'5','π':'6','ζ':'7','η':'8','θ':'9'
+};
+
+// ==============================================
+// ===== حذف علائم نگارشی =====
+// ==============================================
+const DIACRITICS = /[\u064B-\u065F\u0670\u06D6-\u06ED\u06F0-\u06F9\u06FD\u06FE\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/g;
+function removeDiacritics(t){ return t.replace(DIACRITICS,''); }
+function p2e(s){ const m={'۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'}; return s.replace(/[۰-۹]/g, c=>m[c]); }
+
+function cleanText(t){
+    if(!t)return t;
+    t=t.replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/ة/g,'ه');
+    t=t.replace(/ـ/g,'');
+    t=t.replace(/[\u200c\u200d\u200b\u2060\ufeff]/g,'');
+    t=t.replace(/[\u200e\u200f\u202a\u202b\u202c\u202d\u202e]/g,'');
+    t=t.replace(/\t/g,' ').replace(/ +/g,' ').trim();
+    t=p2e(t);
+    t=removeDiacritics(t);
+    return t;
+}
+function htmlEscape(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+
+// ==============================================
+// ===== Tokenizer =====
+// ==============================================
+function tokenize(text) {
+    let tokens=[], i=0;
+    const emojiRegex = /[\u{1F000}-\u{1FFFF}]|[\u{2600}-\u{27BF}]|[\u{FE00}-\u{FEFF}]|[\u{2300}-\u{23FF}]/u;
+    while(i<text.length){
+        let match=text.substring(i).match(emojiRegex);
+        if(match && match.index===0){ tokens.push(['EMOJI', match[0]]); i+=match[0].length; continue; }
+        if(text[i]>='0' && text[i]<='9'){ let n=''; while(i<text.length && text[i]>='0' && text[i]<='9'){ n+=text[i]; i++; } tokens.push(['NUMBER', n]); continue; }
+        if(letterToNum[text[i]] || text[i]==='آ'){ tokens.push(['PERSIAN', text[i]]); i++; continue; }
+        if(['•','|','_',' '].includes(text[i])){ tokens.push(['SEPARATOR', text[i]]); i++; continue; }
+        tokens.push(['OTHER', text[i]]); i++;
+    }
+    return tokens;
+}
+function convertNumberToGreek(ns){ let r=[]; for(let ch of ns){ r.push(numberToGreek[ch]||ch); } return r.join('_'); }
+
+// ==============================================
+// ===== Encode =====
+// ==============================================
+function encode(text) {
+    try {
+        text=cleanText(text);
+        let lines=text.split('\n'), resultLines=[];
+        for(let line of lines){
+            if(!line.trim()){ resultLines.push(''); continue; }
+            let tokens=tokenize(line);
+            let outputParts=[];
+            let currentWord=[];
+            let greekBuffer=[];
+            
+            for(let [tokenType, tokenValue] of tokens){
+                if(tokenType==='PERSIAN'){
+                    if(greekBuffer.length>0){
+                        currentWord.push('|'+greekBuffer.join('_')+'|');
+                        greekBuffer=[];
+                    }
+                    currentWord.push(letterToNum[tokenValue]);
+                } else if(tokenType==='NUMBER'){
+                    greekBuffer.push(convertNumberToGreek(tokenValue));
+                } else if(tokenType==='SEPARATOR'){
+                    if(tokenValue===' '){
+                        if(greekBuffer.length>0){
+                            currentWord.push('|'+greekBuffer.join('_')+'|');
+                            greekBuffer=[];
+                        }
+                        if(currentWord.length>0){
+                            outputParts.push(currentWord.join('_'));
+                            currentWord=[];
+                        }
+                    } else {
+                        if(greekBuffer.length>0){
+                            currentWord.push('|'+greekBuffer.join('_')+'|');
+                            greekBuffer=[];
+                        }
+                        if(currentWord.length>0){
+                            outputParts.push(currentWord.join('_'));
+                            currentWord=[];
+                        }
+                        outputParts.push(tokenValue);
+                    }
+                } else if(tokenType==='EMOJI'){
+                    if(greekBuffer.length>0){
+                        currentWord.push('|'+greekBuffer.join('_')+'|');
+                        greekBuffer=[];
+                    }
+                    if(currentWord.length>0){
+                        outputParts.push(currentWord.join('_'));
+                        currentWord=[];
+                    }
+                    outputParts.push(tokenValue);
+                } else {
+                    if(greekBuffer.length>0){
+                        currentWord.push('|'+greekBuffer.join('_')+'|');
+                        greekBuffer=[];
+                    }
+                    if(currentWord.length>0){
+                        outputParts.push(currentWord.join('_'));
+                        currentWord=[];
+                    }
+                    outputParts.push(tokenValue);
+                }
+            }
+            if(greekBuffer.length>0){
+                currentWord.push('|'+greekBuffer.join('_')+'|');
+                greekBuffer=[];
+            }
+            if(currentWord.length>0){
+                outputParts.push(currentWord.join('_'));
+            }
+            resultLines.push(outputParts.join('•'));
+        }
+        return htmlEscape(resultLines.join('\n'));
+    } catch(e){ console.error(e); return '❌ خطا'; }
+}
+
+// ==============================================
+// ===== Decode =====
+// ==============================================
+function decode(text) {
+    try {
+        text=cleanText(text);
+        let lines=text.split('\n'), finalLines=[];
+        for(let line of lines){
+            if(!line.trim()){ finalLines.push(''); continue; }
+            let parts = line.split('•');
+            let resultWords = [];
+            for(let part of parts){
+                if(!part) continue;
+                let tokens = tokenize(part);
+                let currentWord = '';
+                let inBracket = false;
+                let bracketContent = '';
+                for(let [tokenType, tokenValue] of tokens){
+                    if(tokenType==='SEPARATOR' && tokenValue==='|'){
+                        if(inBracket){
+                            inBracket=false;
+                            let greekTokens = bracketContent.split('_');
+                            for(let gt of greekTokens){
+                                if(greekToNum[gt]!==undefined){
+                                    currentWord += greekToNum[gt];
+                                } else {
+                                    showToast('❌ کاراکتر نامعتبر در |: '+gt,'error');
+                                    return '⚠️ خطا';
+                                }
+                            }
+                            bracketContent='';
+                        } else {
+                            inBracket=true;
+                            bracketContent='';
+                        }
+                        continue;
+                    }
+                    if(inBracket){
+                        bracketContent += tokenValue;
+                        continue;
+                    }
+                    if(tokenType==='NUMBER'){
+                        let num=parseInt(tokenValue);
+                        if(num>32){
+                            showToast('❌ عدد '+num+' معتبر نیست','error');
+                            return '⚠️ خطا';
+                        }
+                        currentWord += numToLetter[tokenValue] || tokenValue;
+                    } else if(tokenType==='PERSIAN'){
+                        currentWord += tokenValue;
+                    } else if(tokenType==='EMOJI'){
+                        currentWord += tokenValue;
+                    } else if(tokenType==='OTHER'){
+                        currentWord += tokenValue;
+                    }
+                }
+                if(currentWord){
+                    resultWords.push(currentWord);
+                }
+            }
+            finalLines.push(resultWords.join(' '));
+        }
+        return htmlEscape(finalLines.join('\n'));
+    } catch(e){ console.error(e); return '❌ خطا'; }
+}
+
+// ==============================================
+// ===== تشخیص خودکار =====
+// ==============================================
+function detectConversionType(t){
+    t=cleanText(t);
+    if(/[ا-ی]/.test(t)) return 'encode';
+    if(/^[0-9_•|α-ωοπϛΑ-ΩΟϚ]+$/.test(t)) return 'decode';
+    if(/[α-ωοπϛ]/.test(t) || /[Α-ΩΟϚ]/.test(t)) return 'decode';
+    if(t.includes('•')||t.includes('|')) return 'decode';
+    if(t.includes('_')&&/\d/.test(t)) return 'decode';
+    return 'encode';
+}
+
+// ==============================================
+// ===== داده‌های ساعت‌ها با ایموجی =====
+// ==============================================
+const hourMeanings = {
+    '00:00': { meanings: ['یه آرزو کن...', 'عشق خیلی واقعی', 'محقق شدن رویا و آرزوها', 'عاشق و دلباخته توست'], source: 'فال ساعت رند، کتاب فرشتگان نگهبان', emoji: '🌟' },
+    '01:01': { meanings: ['بهت فکر میکنه', 'بهت زیاد فکر میکنه', 'خوابتو می‌بینه', 'در انتظار خبرهای خوبی باشید'], source: 'فال ساعت رند، فال ساعت قرینه', emoji: '💭' },
+    '01:10': { meanings: ['افسوس! کاری را شروع کردید اما محقق نمی شود.'], source: 'فال ساعت رند', emoji: '😔' },
+    '01:11': { meanings: ['هیچ پیشنهادی را در این زمان نپذیر.'], source: 'فال ساعت رند', emoji: '⚠️' },
+    '02:02': { meanings: ['بدون تو نمی‌تونه', 'براش مهمی', 'منتظر یک دعوت باشید', 'همش به فکر توئه'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '💕' },
+    '02:20': { meanings: ['خشم تان را کنترل کنید و واژه ها دریابید.'], source: 'فال ساعت رند', emoji: '🧘' },
+    '02:22': { meanings: ['ازت خوشش میاد', 'رازی را کشف خواهید کرد.'], source: 'فال ساعت رند، فال ساعت جفت', emoji: '🔮' },
+    '03:03': { meanings: ['خوابتو می‌بینه', 'برات هر کاری میکنه', 'پشت در عشق ایستاده است', 'داره به خاطراتتون می‌اندیشه'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '🌙' },
+    '03:30': { meanings: ['تغییری که در انتظارش بودید بی پاسخ می‌ماند.', 'حس میکنه تو مغروری'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '😐' },
+    '03:33': { meanings: ['خوشحالی و خوشبختی را ملاقات می کنید.'], source: 'فال ساعت رند', emoji: '😊' },
+    '03:34': { meanings: ['بوس به لبت'], source: 'فال ساعت عاشقانه', emoji: '💋' },
+    '04:04': { meanings: ['همدیگرو می‌بوسید', 'به موقعیتتان از زاویه دیگری نگاه کنید.', 'یک بوسه ی عاشقی'], source: 'فال ساعت رند، فال ساعت قرینه', emoji: '💋' },
+    '04:40': { meanings: ['امروز روز شما نیست.', 'همش آزار و اذیتش میکنی'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '😕' },
+    '04:44': { meanings: ['به حسابش برسید.'], source: 'فال ساعت رند', emoji: '📋' },
+    '05:05': { meanings: ['مال خودته', 'همیشه برای هم هستید', 'دشمنانتان نقشه کشیدن', 'نسبت بهش شکاکی'], source: 'فال ساعت رند، فال ساعت قرینه', emoji: '🛡️' },
+    '05:50': { meanings: ['از آب و آتش حذر کنید.'], source: 'فال ساعت رند', emoji: '🔥' },
+    '05:55': { meanings: ['از ملاقات با آن مرد خردمند دوری نکن.'], source: 'فال ساعت رند', emoji: '🧙' },
+    '06:06': { meanings: ['دوست داره', 'از یادت غافل نیست', 'میترسه که تو رو از دست بده', 'ازدواج سریع یا بطور کلی'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '💖' },
+    '07:07': { meanings: ['عاشقته', 'صلح و دوستی، عشق', 'از مرد یونیفورم پوش حذر کنید.', 'میخواد باهات ازدواج کنه'], source: 'فال ساعت رند، فال ساعت قرینه', emoji: '💍' },
+    '08:08': { meanings: ['یه نفر مو مشکی بهت علاقمند شده', 'پسری/دختری دوست داره', 'در شغلتان پیشرفت', 'به اخلاق و کارهات اهمیت میده'], source: 'فال ساعت رند، فال ساعت قرینه', emoji: '👩‍💼' },
+    '09:09': { meanings: ['اونو می‌بینی', 'همیشه جلوی چشماشی', 'از کیف پول و دستی مراقبت کنید.', 'تصمیمشو گرفته'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '👀' },
+    '10:01': { meanings: ['با مردی تأثیرگذار آشنا می شوید.', 'از کارات بیزاره'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '🤝' },
+    '10:10': { meanings: ['دوست داره', 'حس عشق متقابل', 'وقتش رسیده است …', 'تو اولین انتخاب شی'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '💞' },
+    '11:11': { meanings: ['بدون تو ناراحته', 'خوشحالی', 'به کسی یا چیزی وابسته می‌شوید.', 'از ته دلش دوست داره'], source: 'فال ساعت رند، فال ساعت قرینه', emoji: '✨' },
+    '12:12': { meanings: ['قرار دارید', 'تورو میخواهد فقط', 'پیروزی بر عشق از آن شماست.', 'بهت فکر میکنه اما یکی دیگه رو هم دوست داره'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '💗' },
+    '12:21': { meanings: ['با زنی زیبا ملاقات خواهید کرد.'], source: 'فال ساعت رند', emoji: '👩' },
+    '13:13': { meanings: ['آشنایی تازه', 'با یکی بزودی آشنا میشی', 'از چشم و هم چشمی دوری کنید.', 'پای یکی این وسط درمیونه'], source: 'فال ساعت رند، فال ساعت قرینه', emoji: '🌱' },
+    '13:31': { meanings: ['آنچه در رویایش بودید خواهید یافت.', 'سوگان روحش هستی'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '🦋' },
+    '14:14': { meanings: ['عاشقته', 'خیلی دوست داره عاشقانه', 'ایامتان به عشق مزین می‌شود.', 'خیلی دوست داره'], source: 'فال ساعت رند، فال ساعت عاشقانه', emoji: '💘' },
+    '14:41': { meanings: ['از فکر اینکه به تو علاقه دارد بیا بیرون'], source: 'فال ساعت عاشقانه', emoji: '🤔' },
+    '15:15': { meanings: ['یه پسر سبزه دوست داره', 'یه نفر پوست گندمی بهت نظر داره', 'روت غیرت داره'], source: 'فال ساعت قرینه، فال ساعت عاشقانه', emoji: '🌾' },
+    '15:51': { meanings: ['چرا فکر میکنی بهترین هستی؟'], source: 'فال ساعت عاشقانه', emoji: '🧐' },
+    '16:16': { meanings: ['به هم می‌رسید', 'درک دو طرفه'], source: 'فال ساعت قرینه، فال ساعت عاشقانه', emoji: '🤝' },
+    '17:17': { meanings: ['راست میگه', 'حرفش راسته', 'دلتنگ توئه'], source: 'فال ساعت قرینه، فال ساعت عاشقانه', emoji: '💙' },
+    '18:18': { meanings: ['داره بهت حسودی میکنه', 'حسوده', 'دلش گرفته باهاش تماس بگیر'], source: 'فال ساعت قرینه، فال ساعت عاشقانه', emoji: '📞' },
+    '19:19': { meanings: ['احساساتش رو پنهان میکنه', 'احساساتشو قایم میکنه', 'دوست داره پیشش باشی'], source: 'فال ساعت قرینه، فال ساعت عاشقانه', emoji: '🤫' },
+    '20:02': { meanings: ['کمی باهاش مهربانتر باش'], source: 'فال ساعت عاشقانه', emoji: '🌸' },
+    '20:20': { meanings: ['کسی بهت زنگ میزنه', 'احساس عمیق', 'بوس دله میخواد'], source: 'فال ساعت قرینه، فال ساعت عاشقانه', emoji: '📱' },
+    '21:12': { meanings: ['تحمل تو برایش سخته'], source: 'فال ساعت عاشقانه', emoji: '😓' },
+    '21:21': { meanings: ['نگاهت رو دوست داره', 'به یادت لبخند رو لباشه', 'میخواد عاشقت بشه'], source: 'فال ساعت قرینه، فال ساعت عاشقانه', emoji: '👀' },
+    '22:22': { meanings: ['از تو خوشش میاد', 'خیلی دوست دارد، او را از دست نده', 'خیالت تخت که تور میخواد'], source: 'فال ساعت قرینه، فال ساعت عاشقانه', emoji: '💝' },
+    '23:23': { meanings: ['محبت', 'کامل همدیگه رو می‌فهمید', 'توی خواب دیده تورو'], source: 'فال ساعت قرینه، فال ساعت عاشقانه', emoji: '🌙' },
+    '23:32': { meanings: ['ولش کن، اصن بهت فکرم نمیکنه'], source: 'فال ساعت عاشقانه', emoji: '🚫' },
+    '00:01': { meanings: ['بهت فکر میکنه'], source: 'فال ساعت جفت', emoji: '💭' }
+};
+
+// ==============================================
+// ===== توابع ساعت =====
+// ==============================================
+function getHourMeanings(hour, minute) {
+    const timeStr = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    const reverseStr = `${String(minute).padStart(2, '0')}:${String(hour).padStart(2, '0')}`;
+    if (hourMeanings[timeStr]) return hourMeanings[timeStr];
+    if (hour === minute && hourMeanings[`${String(hour).padStart(2, '0')}:${String(hour).padStart(2, '0')}`]) {
+        return hourMeanings[`${String(hour).padStart(2, '0')}:${String(hour).padStart(2, '0')}`];
+    }
+    if (hourMeanings[reverseStr]) return hourMeanings[reverseStr];
+    return null;
+}
+
+function findNearestMeaningfulHour(currentHour, currentMinute) {
+    const allHours = Object.keys(hourMeanings);
+    let nearest = null;
+    let nearestDiff = Infinity;
+    const currentMinutes = currentHour * 60 + currentMinute;
+    for (const timeStr of allHours) {
+        const [h, m] = timeStr.split(':').map(Number);
+        let diff = (h * 60 + m) - currentMinutes;
+        if (diff < 0) diff += 1440;
+        if (diff < nearestDiff) {
+            nearestDiff = diff;
+            nearest = timeStr;
+        }
+    }
+    return { time: nearest, diff: nearestDiff };
+}
+
+// ==============================================
+// ===== نمایش معنی ساعت با تایپ‌رایتر =====
+// ==============================================
+let meaningInterval = null;
+let isMeaningMode = false;
+
+function showHourMeaning(hour, minute) {
+    const timeEl = document.getElementById('clock');
+    const timeStr = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    const data = getHourMeanings(hour, minute);
+    
+    if (data && data.meanings && data.meanings.length > 0) {
+        if (meaningInterval) { clearInterval(meaningInterval); meaningInterval = null; }
+        isMeaningMode = true;
+        timeEl.className = 'time meaning-mode';
+        
+        typewriterEffectSimple(timeEl, data.meanings[0], 20);
+        dropHearts(8);
+        showToast(`💜 ساعت ${timeStr} جفت شد!`, 'info', 2000);
+        
+        let idx = 0;
+        if (data.meanings.length > 1) {
+            meaningInterval = setInterval(() => {
+                idx = (idx + 1) % data.meanings.length;
+                timeEl.style.opacity = '0';
+                setTimeout(() => {
+                    typewriterEffectSimple(timeEl, data.meanings[idx], 20);
+                    timeEl.style.opacity = '1';
+                }, 150);
+            }, 10000);
+        }
+        
+        setTimeout(() => {
+            if (meaningInterval) { clearInterval(meaningInterval); meaningInterval = null; }
+            isMeaningMode = false;
+            timeEl.className = 'time';
+            const now = new Date();
+            timeEl.textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+            timeEl.style.opacity = '1';
+        }, 60000);
+    }
+}
+
+// ==============================================
+// ===== تایپ‌رایتر ساده برای ساعت =====
+// ==============================================
+function typewriterEffectSimple(element, text, speed = 20) {
+    return new Promise((resolve) => {
+        if (window._typewriterTimer) {
+            clearTimeout(window._typewriterTimer);
+        }
+        element.textContent = '';
+        let index = 0;
+        
+        function type() {
+            if (index < text.length) {
+                const char = text[index];
+                element.textContent += char;
+                index++;
+                window._typewriterTimer = setTimeout(type, speed);
+            } else {
+                resolve();
+            }
+        }
+        type();
+    });
+}
+
+// ==============================================
+// ===== به‌روزرسانی نزدیک‌ترین ساعت =====
+// ==============================================
+function updateNearestHour(currentHour, currentMinute) {
+    const nearestEl = document.getElementById('nearestHour');
+    const result = findNearestMeaningfulHour(currentHour, currentMinute);
+    if (result && result.time) {
+        const data = hourMeanings[result.time];
+        const firstMeaning = data && data.meanings ? data.meanings[0] : '';
+        const source = data && data.source ? data.source : '';
+        nearestEl.innerHTML = `
+            ⏳ نزدیک‌ترین: 
+            <span class="nh-time">${result.time}</span>
+            <span class="nh-meaning">${firstMeaning}</span>
+            <span class="nh-source">(${source})</span>
+            <span style="color:#6a6a8a;font-size:0.5rem;">- ${result.diff} دقیقه دیگر</span>
+        `;
+    }
+}
+
+// ==============================================
+// ===== منبع پاپ‌آپ =====
+// ==============================================
+function showSourceTooltip(event, source) {
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+    
+    let tooltip = document.getElementById('sourceTooltip');
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'sourceTooltip';
+        tooltip.className = 'source-tooltip';
+        document.body.appendChild(tooltip);
+    }
+    
+    let rect;
+    if (event && event.target) {
+        rect = event.target.getBoundingClientRect();
+    } else {
+        const btn = document.querySelector('.m-source-btn, .sr-source-btn');
+        if (btn) rect = btn.getBoundingClientRect();
+        else return;
+    }
+    
+    tooltip.textContent = source;
+    tooltip.style.left = Math.max(10, rect.left + rect.width/2 - 140) + 'px';
+    tooltip.style.top = (rect.top - 50) + 'px';
+    tooltip.classList.add('show');
+    
+    clearTimeout(tooltip._hideTimer);
+    tooltip._hideTimer = setTimeout(() => {
+        tooltip.classList.remove('show');
+    }, 2000);
+}
+
+// ==============================================
+// ===== ستاره دنباله‌دار و شفق =====
+// ==============================================
+function createShootingStar() {
+    const star = document.createElement('div');
+    star.className = 'shooting-star';
+    const startX = Math.random() * 100;
+    const endX = startX + (Math.random() > 0.5 ? 1 : -1) * (200 + Math.random() * 350);
+    const endY = 80 + Math.random() * 200;
+    star.style.left = startX + '%';
+    star.style.top = (Math.random() * 40) + '%';
+    star.style.opacity = '1';
+    
+    const keyframeName = `shootStar_${Date.now()}`;
+    const styleEl = document.createElement('style');
+    styleEl.textContent = `
+        @keyframes ${keyframeName} {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            60% { opacity: 0.9; }
+            100% { transform: translate(${endX - startX}px, ${endY}px) scale(0); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(styleEl);
+    star.style.animation = `${keyframeName} ${1.8 + Math.random() * 2.5}s linear forwards`;
+    
+    document.body.appendChild(star);
+    setTimeout(() => {
+        star.remove();
+        styleEl.remove();
+    }, 4500);
+}
+
+function createAurora() {
+    const aurora = document.createElement('div');
+    aurora.className = 'aurora';
+    const colors = [
+        `rgba(${80 + Math.random()*120}, ${40 + Math.random()*100}, 255, 0.04)`,
+        `rgba(${130 + Math.random()*80}, ${20 + Math.random()*80}, 255, 0.03)`,
+        `rgba(${60 + Math.random()*100}, ${80 + Math.random()*80}, 255, 0.02)`
+    ];
+    aurora.style.background = `radial-gradient(ellipse at center, ${colors.join(', ')}, transparent 70%)`;
+    aurora.style.width = (150 + Math.random() * 250) + 'px';
+    aurora.style.height = (50 + Math.random() * 70) + 'px';
+    aurora.style.top = (5 + Math.random() * 75) + '%';
+    aurora.style.left = (5 + Math.random() * 85) + '%';
+    aurora.style.setProperty('--tx', (Math.random() > 0.5 ? '' : '-') + (40 + Math.random() * 120) + 'px');
+    aurora.style.setProperty('--ty', (-20 + Math.random() * 50) + 'px');
+    aurora.style.setProperty('--s', 0.7 + Math.random() * 0.5);
+    aurora.style.setProperty('--r', (Math.random() * 25 - 12.5) + 'deg');
+    aurora.style.animation = `auroraFloat ${12 + Math.random() * 10}s ease-in-out infinite alternate`;
+    document.body.appendChild(aurora);
+    setTimeout(() => aurora.remove(), 22000);
+}
+
+function initBackgroundEffects() {
+    setInterval(() => { if (Math.random() < 0.4) createShootingStar(); }, 2000);
+    setInterval(() => { if (Math.random() < 0.3) createAurora(); }, 8000);
+    setInterval(() => {
+        const now = new Date();
+        if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() < 10) {
+            for (let i = 0; i < 8; i++) setTimeout(() => createShootingStar(), i * 200);
+        }
+    }, 1000);
+}
+
+// ==============================================
+// ===== قلب‌بارون =====
+// ==============================================
+function dropHearts(count = 10) {
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'heart-drop';
+            const emojis = ['💕', '❤️', '💖', '💗', '💜', '✨', '🌟', '💫', '🌸', '🦋'];
+            heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+            heart.style.left = (Math.random() * 100) + '%';
+            heart.style.animationDuration = (Math.random() * 2.5 + 2.5) + 's';
+            heart.style.fontSize = (Math.random() * 22 + 14) + 'px';
+            heart.style.opacity = Math.random() * 0.4 + 0.2;
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }, i * 70);
+    }
+}
+
+// ==============================================
+// ===== ساعت اصلی =====
+// ==============================================
+let lastHour = -1, lastMinute = -1;
+
+function startClock() {
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const hourNum = parseInt(hours), minuteNum = parseInt(minutes);
+        
+        if (!isMeaningMode) {
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        if (seconds === '00' || seconds === '10' || seconds === '20' || seconds === '30' || seconds === '40' || seconds === '50') {
+            updateNearestHour(hourNum, minuteNum);
+        }
+        
+        if (seconds === '00') {
+            const hasMeaning = getHourMeanings(hourNum, minuteNum) !== null;
+            if (hasMeaning && (lastHour !== hourNum || lastMinute !== minuteNum)) {
+                lastHour = hourNum; lastMinute = minuteNum;
+                showHourMeaning(hourNum, minuteNum);
+            }
+        }
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+}
+
+// ==============================================
+// ===== دکمه ! =====
+// ==============================================
+document.getElementById('helpBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    showHoursListWithSearch();
+});
+
+// ==============================================
+// ===== نمایش لیست ساعت‌ها با سرچ =====
+// ==============================================
+let modalSearchData = [];
+
+function showHoursListWithSearch() {
+    const modal = document.getElementById('modalOverlay');
+    document.getElementById('modalIcon').textContent = '🕐';
+    document.getElementById('modalTitle').textContent = 'معنی ساعت‌های جفت و رند';
+    document.getElementById('modalSub').textContent = 'همه ساعاتی که معنی دارند';
+    
+    document.getElementById('modalSearchContainer').style.display = 'flex';
+    document.getElementById('modalSearchResult').style.display = 'block';
+    
+    const bodyEl = document.getElementById('modalBody');
+    bodyEl.className = 'modal-body';
+    bodyEl.style.textAlign = 'right';
+    bodyEl.style.whiteSpace = 'normal';
+    bodyEl.style.lineHeight = '2.2';
+    
+    document.getElementById('modalSearchResult').innerHTML = '';
+    document.getElementById('modalSearchInput').value = '';
+    
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const allKeys = Object.keys(hourMeanings).sort((a, b) => a.localeCompare(b));
+    const future = [], past = [];
+    
+    for (const key of allKeys) {
+        const [h, m] = key.split(':').map(Number);
+        if ((h * 60 + m) >= currentMinutes) future.push(key);
+        else past.push(key);
+    }
+    future.sort((a, b) => {
+        const [ah, am] = a.split(':').map(Number);
+        const [bh, bm] = b.split(':').map(Number);
+        return (ah * 60 + am) - (bh * 60 + bm);
+    });
+    past.sort((a, b) => {
+        const [ah, am] = a.split(':').map(Number);
+        const [bh, bm] = b.split(':').map(Number);
+        return (bh * 60 + bm) - (ah * 60 + am);
+    });
+    
+    const allSorted = [...future, ...past];
+    let html = '', fCount = 0, pCount = 0;
+    
+    modalSearchData = [];
+    
+    for (const key of allSorted) {
+        const data = hourMeanings[key];
+        if (!data) continue;
+        const [h, m] = key.split(':').map(Number);
+        const isFuture = (h * 60 + m) >= currentMinutes;
+        if (isFuture && fCount === 0) html += `<div class="category-title">⏳ ساعت‌های آینده (نزدیک‌ترین اول)</div>`;
+        if (!isFuture && pCount === 0) html += `<div class="category-title">⏮️ ساعت‌های گذشته (نزدیک‌ترین اول)</div>`;
+        if (isFuture) fCount++; else pCount++;
+        
+        modalSearchData.push({ key, data });
+        
+        const emoji = data.emoji || '🕐';
+        html += `<div class="hour-item" data-hour="${key}">
+            <span class="hour-time">${key}</span>
+            <div class="hour-meanings">`;
+        data.meanings.forEach((meaning, idx) => {
+            html += `<div class="meaning-line">
+                <span class="m-emoji">${emoji}</span>
+                <span class="m-text">${meaning}</span>
+                <button class="m-source-btn" onclick="showSourceTooltip(event, '${data.source.replace(/'/g, "\\'")}')">!</button>
+            </div>`;
+        });
+        html += `</div></div>`;
+    }
+    bodyEl.innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    
+    const searchInput = document.getElementById('modalSearchInput');
+    const searchResult = document.getElementById('modalSearchResult');
+    
+    searchInput.oninput = function() {
+        const val = this.value.trim();
+        if (!val) {
+            searchResult.innerHTML = '';
+            document.querySelectorAll('.modal-body .hour-item').forEach(el => {
+                el.style.display = '';
+                el.style.border = 'none';
+                el.style.background = '';
+            });
+            return;
+        }
+        
+        let clean = val.replace(/[^0-9:۰-۹]/g, '');
+        const persianToEnglish = { '۰':'0', '۱':'1', '۲':'2', '۳':'3', '۴':'4', '۵':'5', '۶':'6', '۷':'7', '۸':'8', '۹':'9' };
+        clean = clean.replace(/[۰-۹]/g, m => persianToEnglish[m] || m);
+        
+        if (clean.length === 4 && !clean.includes(':')) {
+            clean = clean.substring(0, 2) + ':' + clean.substring(2);
+        }
+        if (clean.length === 5 && clean.includes(':')) {
+            const [h, m] = clean.split(':').map(Number);
+            if (!isNaN(h) && !isNaN(m) && h >= 0 && h <= 23 && m >= 0 && m <= 59) {
+                const key = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                const found = modalSearchData.find(item => item.key === key);
+                if (found) {
+                    const now2 = new Date();
+                    const currentMin2 = now2.getHours() * 60 + now2.getMinutes();
+                    const targetMin = h * 60 + m;
+                    let timeRemaining = '';
+                    if (targetMin > currentMin2) {
+                        const diff = targetMin - currentMin2;
+                        if (diff < 60) {
+                            timeRemaining = `(${diff} دقیقه دیگر)`;
+                        } else {
+                            const hours2 = Math.floor(diff / 60);
+                            const mins2 = diff % 60;
+                            timeRemaining = `(${hours2} ساعت و ${mins2} دقیقه دیگر)`;
+                        }
+                    } else if (targetMin < currentMin2) {
+                        timeRemaining = `(فردا)`;
+                    }
+                    
+                    const emoji = found.data.emoji || '🕐';
+                    let meaningsHtml = found.data.meanings.map((meaning, idx) => `
+                        <div class="sr-meaning-line">
+                            <span class="sr-emoji">${emoji}</span>
+                            <span>${meaning}</span>
+                            <button class="sr-source-btn" onclick="showSourceTooltip(event, '${found.data.source.replace(/'/g, "\\'")}')">!</button>
+                        </div>
+                    `).join('');
+                    
+                    searchResult.innerHTML = `
+                        <div class="sr-found">
+                            معنی‌های <span class="sr-purple">${found.key}</span>
+                            <span class="sr-time-remaining">${timeRemaining}</span>
+                        </div>
+                        <div class="sr-meanings">${meaningsHtml}</div>
+                    `;
+                    
+                    document.querySelectorAll('.modal-body .hour-item').forEach(el => {
+                        el.style.display = el.dataset.hour === key ? '' : 'none';
+                    });
+                } else {
+                    searchResult.innerHTML = `<div class="sr-notfound">❌ ساعت ${key} معنی خاصی ندارد!</div>`;
+                    document.querySelectorAll('.modal-body .hour-item').forEach(el => el.style.display = 'none');
+                }
+                return;
+            }
+        }
+        searchResult.innerHTML = `<div class="sr-notfound">❌ فرمت صحیح: HH:MM (مثلاً 12:12)</div>`;
+        document.querySelectorAll('.modal-body .hour-item').forEach(el => el.style.display = 'none');
+    };
+}
+
+// ==============================================
+// ===== توابع Toast و Typewriter =====
+// ==============================================
+let toastHistory = {};
+let toastTimers = {};
+let typewriterTimeout = null;
+let isTypewriterRunning = false;
+
+function typewriterEffect(element, text, speed = 20) {
+    return new Promise((resolve) => {
+        if (isTypewriterRunning) { clearTimeout(typewriterTimeout); isTypewriterRunning = false; }
+        element.innerHTML = '';
+        let index = 0;
+        isTypewriterRunning = true;
+        
+        const lines = text.split('\n');
+        let currentLine = 0;
+        let currentChar = 0;
+        
+        function type() {
+            if (currentLine < lines.length) {
+                const line = lines[currentLine];
+                if (currentChar < line.length) {
+                    const char = line[currentChar];
+                    if (currentChar === 0 && currentLine > 0) {
+                        element.innerHTML += '<br>';
+                    }
+                    element.innerHTML += char;
+                    currentChar++;
+                    const delay = char === ' ' ? speed * 0.5 : speed;
+                    typewriterTimeout = setTimeout(type, delay);
+                } else {
+                    currentLine++;
+                    currentChar = 0;
+                    if (currentLine < lines.length) {
+                        element.innerHTML += '<br>';
+                    }
+                    typewriterTimeout = setTimeout(type, speed * 0.5);
+                }
+            } else {
+                isTypewriterRunning = false;
+                resolve();
+            }
+        }
+        type();
+    });
+}
+
+function showToast(msg, type = 'info', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    const key = msg + '|' + type;
+    if (toastHistory[key]) {
+        toastHistory[key].count++;
+        const badge = toastHistory[key].element.querySelector('.toast-badge');
+        if (badge) {
+            badge.textContent = toastHistory[key].count + 'x';
+            badge.classList.add('show-badge');
+        }
+        clearTimeout(toastTimers[key]);
+        const newTimer = setTimeout(() => { removeToast(key); }, duration);
+        toastTimers[key] = newTimer;
+        return;
+    }
+    if (window.navigator && window.navigator.vibrate) {
+        if (type === 'error') window.navigator.vibrate([30, 40, 30]);
+        else window.navigator.vibrate(15);
+    }
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    const icons = { success: '✅', error: '❌', info: '💜' };
+    toast.innerHTML = `<span class="toast-icon">${icons[type] || 'ℹ️'}</span><span class="toast-text"></span><span class="toast-badge"></span><span class="toast-progress"></span>`;
+    container.appendChild(toast);
+    const textEl = toast.querySelector('.toast-text');
+    typewriterEffect(textEl, msg, 25);
+    toastHistory[key] = { element: toast, count: 1 };
+    if (type === 'error') { const ib = document.getElementById('inputBox'); ib.classList.add('shake'); setTimeout(() => ib.classList.remove('shake'), 400); }
+    const timer = setTimeout(() => { removeToast(key); }, duration);
+    toastTimers[key] = timer;
+    return toast;
+}
+
+function removeToast(key) {
+    if (toastHistory[key]) {
+        const toast = toastHistory[key].element;
+        if (toast && toast.parentNode) {
+            toast.classList.add('removing');
+            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 400);
+        }
+        delete toastHistory[key];
+        delete toastTimers[key];
+    }
+}
+
+function showModal(icon, title, sub, body) {
+    document.getElementById('modalSearchContainer').style.display = 'none';
+    document.getElementById('modalSearchResult').style.display = 'none';
+    
+    document.getElementById('modalIcon').textContent = icon || 'ℹ️';
+    document.getElementById('modalTitle').textContent = title || 'عنوان';
+    document.getElementById('modalSub').textContent = sub || 'اطلاعات';
+    const bodyEl = document.getElementById('modalBody');
+    bodyEl.innerHTML = '';
+    bodyEl.className = 'modal-body';
+    bodyEl.style.textAlign = 'center';
+    bodyEl.style.whiteSpace = 'normal';
+    bodyEl.style.lineHeight = '1.8';
+    typewriterEffect(bodyEl, body, 18);
+    document.getElementById('modalOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    if (isTypewriterRunning) { clearTimeout(typewriterTimeout); isTypewriterRunning = false; }
+    document.getElementById('modalOverlay').classList.remove('show');
+    document.body.style.overflow = '';
+    const searchInput = document.getElementById('modalSearchInput');
+    const searchResult = document.getElementById('modalSearchResult');
+    if (searchInput) searchInput.value = '';
+    if (searchResult) searchResult.innerHTML = '';
+    const tooltip = document.getElementById('sourceTooltip');
+    if (tooltip) tooltip.classList.remove('show');
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+document.addEventListener('scroll', function() {
+    const tooltip = document.getElementById('sourceTooltip');
+    if (tooltip) tooltip.classList.remove('show');
+}, { passive: true });
+
+document.addEventListener('click', function() {
+    const tooltip = document.getElementById('sourceTooltip');
+    if (tooltip) tooltip.classList.remove('show');
+});
+
+// ==============================================
+// ===== دکمه‌ها (درباره، آمار، تاریخچه) =====
+// ==============================================
+let conversionCount = 0, historyLog = '';
+let isWelcome = true;
+
+function showAbout() {
+    showModal('🤖', 'درباره ربات', `نسخه ${APP_VERSION}`,
+        `✅ تبدیل فارسی ↔ کد مخفی
+✅ تشخیص خودکار
+✅ پشتیبانی از اعداد یونانی (π = ۶)
+✅ حذف خودکار علائم نگارشی
+✅ نمایش معنی ساعت‌های جفت و رند
+✅ نزدیک‌ترین ساعت با منبع
+✅ منبع با پاپ‌آپ ۲ ثانیه‌ای
+✅ آپدیت خودکار از GitHub
+✅ ستاره دنباله‌دار و شفق
+
+📅 تاریخ انتشار: ۱۴۰۴/۱۲/۲۵`
+    );
+}
+
+function showStats() {
+    const level = conversionCount > 50 ? 'حرفه‌ای 🏆' : conversionCount > 10 ? 'فعال 🔥' : 'تازه‌کار 🌱';
+    showModal('📊', 'آمار من', 'کاربر گرامی',
+        `📝 تعداد تبدیل‌ها: ${conversionCount}
+📆 تاریخ عضویت: ۱۴۰۴/۱۲/۲۵
+⭐ سطح کاربری: ${level}`
+    );
+}
+
+function showHistory() {
+    if (conversionCount === 0) {
+        showModal('📜', 'تاریخچه', 'هنوز تبدیلی انجام نشده',
+            `📭 هنوز هیچ تبدیلی انجام ندادید!
+اولین تبدیل شما منتظر است... ✨`
+        );
+        return;
+    }
+    showModal('📜', 'تاریخچه تبدیل‌ها', `${conversionCount} تبدیل انجام شده`,
+        `📌 آخرین تبدیل‌ها:
+
+${historyLog || 'هنوز تبدیلی انجام ندادید!'}`
+    );
+}
+
+function clearAll() {
+    const ib = document.getElementById('inputBox'), od = document.getElementById('outputText');
+    if (ib.value === '' && od.textContent === '—') { showToast('همه چیز خالی است!', 'info'); return; }
+    ib.value = ''; od.textContent = '—'; od.setAttribute('data-error', 'false'); od.setAttribute('dir', 'rtl');
+    ib.style.height = 'auto';
+    od.classList.remove('welcome-message');
+    showToast('🧹 همه چیز پاک شد!', 'success');
+}
+
+// ==============================================
+// ===== رویدادهای تبدیل =====
+// ==============================================
+const inputBox = document.getElementById('inputBox');
+const outputDiv = document.getElementById('outputText');
+const resultBox = document.getElementById('resultBox');
+let lastValue = '', lastResult = '', debounceTimer;
+
+function update() {
+    let rawText = inputBox.value;
+    lastValue = inputBox.value;
+    
+    if (rawText === '') { 
+        outputDiv.textContent = '—'; 
+        outputDiv.setAttribute('data-error', 'false'); 
+        outputDiv.setAttribute('dir', 'rtl');
+        outputDiv.classList.remove('welcome-message');
+        isWelcome = false;
+        return; 
+    }
+    
+    outputDiv.classList.remove('welcome-message');
+    isWelcome = false;
+    
+    let convType = detectConversionType(rawText);
+    let result;
+    if (convType === 'encode') { result = encode(rawText); }
+    else if (convType === 'decode') { result = decode(rawText); }
+    else { result = rawText; }
+    if (result.includes('❌') || result.includes('⚠️')) { outputDiv.textContent = result; outputDiv.setAttribute('data-error', 'true'); return; }
+    if (result !== lastResult && result !== '—') {
+        conversionCount++;
+        let short = result.length > 30 ? result.slice(0, 30) + '...' : result;
+        historyLog = `${conversionCount}. ${short}\n` + (historyLog || '').split('\n').slice(0, 4).join('\n');
+        lastResult = result;
+        outputDiv.textContent = result;
+        outputDiv.setAttribute('data-error', 'false');
+        outputDiv.setAttribute('dir', 'ltr');
+    } else {
+        outputDiv.textContent = result;
+        outputDiv.setAttribute('data-error', 'false');
+        outputDiv.setAttribute('dir', 'ltr');
+    }
+}
+
+inputBox.addEventListener('input', function(){ clearTimeout(debounceTimer); debounceTimer = setTimeout(update, 200); });
+
+resultBox.addEventListener('click', async function(e) {
+    e.stopPropagation();
+    let txt = outputDiv.textContent;
+    let isErr = outputDiv.getAttribute('data-error') === 'true';
+    
+    if (isWelcome || !txt || txt === '—' || isErr || txt.includes('❌') || txt.includes('⚠️')) { 
+        return; 
+    }
+    
+    inputBox.blur();
+    const r = resultBox.getBoundingClientRect();
+    const emojis = ['✨', '⭐', '💫', '🌟', '💜'];
+    for (let i = 0; i < 10; i++) {
+        const s = document.createElement('div');
+        s.className = 'spark';
+        s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        s.style.left = (r.left + r.width/2) + 'px';
+        s.style.top = (r.top + r.height/2) + 'px';
+        const a = Math.random() * Math.PI * 2, d = 20 + Math.random() * 60;
+        s.style.setProperty('--tx', Math.cos(a) * d + 'px');
+        s.style.setProperty('--ty', Math.sin(a) * d + 'px');
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 700);
+    }
+    try {
+        await navigator.clipboard.writeText(txt);
+        showToast('📋 کپی شد!', 'success');
+        resultBox.style.transform = 'scale(0.97)';
+        setTimeout(() => resultBox.style.transform = '', 150);
+    } catch (err) {
+        try {
+            const ta = document.createElement('textarea');
+            ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('📋 کپی شد!', 'success');
+            resultBox.style.transform = 'scale(0.97)';
+            setTimeout(() => resultBox.style.transform = '', 150);
+        } catch (err2) { showToast('کپی نشد!', 'error'); }
+    }
+});
+
+inputBox.value = ''; update();
+function autoResizeTextarea() {
+    inputBox.style.height = 'auto';
+    inputBox.style.height = Math.min(inputBox.scrollHeight, 180) + 'px';
+}
+inputBox.addEventListener('input', autoResizeTextarea);
+autoResizeTextarea();
+
+// ==============================================
+// ===== راه‌اندازی =====
+// ==============================================
+startClock();
+initBackgroundEffects();
+
+function createStars() {
+    const c = document.getElementById('stars');
+    for (let i = 0; i < 120; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const sz = Math.random() * 3.5 + 0.5;
+        s.style.width = sz + 'px'; s.style.height = sz + 'px';
+        s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%';
+        s.style.setProperty('--duration', (Math.random() * 6 + 3) + 's');
+        s.style.animationDelay = (Math.random() * 10) + 's';
+        c.appendChild(s);
+    }
+}
+createStars();
+
+function createFloatingParticles() {
+    const c = document.getElementById('floatingParticles');
+    for (let i = 0; i < 15; i++) {
+        const p = document.createElement('div');
+        p.className = 'f-particle';
+        const sz = Math.random() * 150 + 80;
+        p.style.width = sz + 'px'; p.style.height = sz + 'px';
+        p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
+        p.style.setProperty('--duration', (Math.random() * 12 + 8) + 's');
+        p.style.animationDelay = (Math.random() * 8) + 's';
+        p.style.opacity = Math.random() * 0.04 + 0.01;
+        c.appendChild(p);
+    }
+}
+createFloatingParticles();
+
+document.querySelectorAll('.glass-card').forEach(c => {
+    c.addEventListener('mousemove', e => {
+        const r = c.getBoundingClientRect();
+        c.style.setProperty('--mouse-x', ((e.clientX - r.left) / r.width * 100) + '%');
+        c.style.setProperty('--mouse-y', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+});
+
+document.querySelectorAll('.btn, .btn-clear, .btn-modal-close').forEach(b => {
+    b.addEventListener('click', function(e) {
+        const r = this.getBoundingClientRect();
+        const rip = document.createElement('span');
+        rip.className = 'ripple';
+        const sz = Math.max(r.width, r.height);
+        rip.style.width = rip.style.height = sz + 'px';
+        rip.style.left = (e.clientX - r.left - sz / 2) + 'px';
+        rip.style.top = (e.clientY - r.top - sz / 2) + 'px';
+        rip.style.position = 'absolute';
+        rip.style.borderRadius = '50%';
+        rip.style.background = 'rgba(139,92,246,0.08)';
+        rip.style.transform = 'scale(0)';
+        rip.style.animation = 'rippleAnim 0.6s linear';
+        rip.style.pointerEvents = 'none';
+        this.appendChild(rip);
+        setTimeout(() => rip.remove(), 600);
+    });
+});
+
+const rippleStyle = document.createElement('style');
+rippleStyle.textContent = `
+    @keyframes rippleAnim {
+        to { transform: scale(4); opacity: 0; }
+    }
+`;
+document.head.appendChild(rippleStyle);
+
+// ===== پیام خوش‌آمد =====
+setTimeout(() => {
+    const welcomeText = '🤖 خوش آمدید! اینجا پیام‌ها رو به کد مخفی تبدیل کن...';
+    const outputEl = document.getElementById('outputText');
+    outputEl.className = 'result-text welcome-message';
+    outputEl.setAttribute('dir', 'rtl');
+    outputEl.setAttribute('data-error', 'false');
+    typewriterEffect(outputEl, welcomeText, 25);
+    isWelcome = true;
+}, 500);
+
+// ===== بررسی آپدیت در شروع =====
+setTimeout(() => {
+    const savedVersion = localStorage.getItem('app_version');
+    if (savedVersion) {
+        document.getElementById('versionNumber').textContent = savedVersion;
+    }
+    checkForUpdate();
+}, 1000);
+
+// چک کردن آپدیت هر ۱۰ دقیقه
+setInterval(() => {
+    if (navigator.onLine) {
+        checkForUpdate();
+    }
+}, 600000);
+
+console.log(`✅ برنامه زبان مخفی v${APP_VERSION} راه‌اندازی شد!`);
+</script>
+</body>
+</html>
