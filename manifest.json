@@ -1,7 +1,7 @@
 {
   "name": "زبان مخفی",
   "short_name": "زبان مخفی",
-  "description": "تبدیل متن به کد مخفی و بالعکس با قابلیت آپدیت خودکار",
+  "description": "تبدیل متن به کد مخفی و بالعکس",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1a1a2e",
@@ -15,7 +15,7 @@
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "icon-192.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
